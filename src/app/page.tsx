@@ -1,8 +1,11 @@
-import ContactBar from "@/components/ContactBar";
-import Feature from "@/components/Feature";
 import HeroSectionPage from "@/components/HeroSection";
 import AboutUsPage01 from "@/components/shadcn-studio/blocks/about-us-page-01/about-us-page-01";
 import FeatureMain from "@/components/FeatureMain";
+import GalleryPage from "@/components/GalleryPage";
+import Testimonials from "@/components/Testimonials";
+import Events from "@/components/Events";
+import TeamPage from "@/components/TeamPage";
+import Footer from "@/components/shadcn-studio/blocks/footer-component-01/footer-component-01";
 import { FaChildren, FaHandHoldingDollar, FaGlobe, FaChartLine } from "react-icons/fa6";
 
 const page = () => {
@@ -19,7 +22,11 @@ const page = () => {
       <HeroSectionPage />
       <AboutUsPage01 stats={stats} />
       <FeatureMain />
-      <Feature />
+      <GalleryPage />
+      <Testimonials />
+      <Events />
+      <TeamPage />
+      <Footer />
     </div>
   );
 };
