@@ -42,32 +42,19 @@ const gallerySections = [
         alt: "image-4",
       },
       {
-        src: "/image-11.jpg",
+        src: "/image-4.jpg",
         alt: "image-4",
       },
       {
-        src: "/image-12.jpg",
+        src: "/image-9.jpg",
         alt: "image-4",
       },
     ],
   },
   {
-    type: "grid",
     images: [
       {
-        src: "/image-9.jpg",
-        alt: "image-4",
-      },
-      {
-        src: "/image-10.jpg",
-        alt: "image-4",
-      },
-      {
-        src: "/image-11.jpg",
-        alt: "image-4",
-      },
-      {
-        src: "/image-12.jpg",
+        src: "/image-8.jpg",
         alt: "image-4",
       },
     ],
@@ -75,7 +62,11 @@ const gallerySections = [
 ];
 
 const GalleryPage = () => {
-  return <Gallery sections={gallerySections} />;
+  return (
+    <section id="gallery" className="scroll-mt-8">
+      <Gallery sections={gallerySections} />
+    </section>
+  );
 };
 
 export default GalleryPage;

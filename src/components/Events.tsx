@@ -76,7 +76,11 @@ const blogPosts = [
 ];
 
 const Events = () => {
-  return <Blog blogPosts={blogPosts} />;
+  return (
+    <section id="events" className="scroll-mt-16">
+      <Blog blogPosts={blogPosts} />
+    </section>
+  );
 };
 
 export default Events;

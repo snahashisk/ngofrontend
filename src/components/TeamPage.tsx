@@ -4,7 +4,7 @@ const teamMembers = [
   {
     image: "https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/team/image-1.png",
     alt: "Phillip Bothman",
-    name: "Phillip Bothman",
+    name: "Snahashis Kanrar",
     role: "Founder & CEO",
     description: "A visionary leader driving innovation and collaboration.",
     socialLinks: {
@@ -17,7 +17,7 @@ const teamMembers = [
   {
     image: "https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/team/image-2.png",
     alt: "James Kenter",
-    name: "James Kenter",
+    name: "Koustav Das",
     role: "Engineering Manager",
     description: "Leading teams to build smart, scalable solutions.",
     socialLinks: {
@@ -30,7 +30,7 @@ const teamMembers = [
   {
     image: "https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/team/image-3.png",
     alt: "Cristofer Kenter",
-    name: "Cristofer Kenter",
+    name: "Shalini Mukherjee",
     role: "Product Designer",
     description: "Crafting intuitive and engaging user experiences.",
     socialLinks: {
@@ -43,7 +43,7 @@ const teamMembers = [
   {
     image: "https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/team/image-4.png",
     alt: "Alena Lubin",
-    name: "Alena Lubin",
+    name: "Sweety Nag",
     role: "Frontend Developer",
     description: "Bringing designs to life with seamless interfaces.",
     socialLinks: {

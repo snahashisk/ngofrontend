@@ -9,19 +9,27 @@ const navigationData: NavigationSection[] = [
   },
   {
     title: "About",
-    href: "#",
+    href: "#about",
   },
   {
     title: "Donation",
-    href: "#",
+    href: "#donation",
+  },
+  {
+    title: "Gallery",
+    href: "#gallery",
   },
   {
     title: "Events",
-    href: "#",
+    href: "#events",
+  },
+  {
+    title: "Faq",
+    href: "#faq",
   },
   {
     title: "Contact",
-    href: "#",
+    href: "#contact",
   },
 ];
 

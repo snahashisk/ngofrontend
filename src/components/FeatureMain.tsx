@@ -84,7 +84,11 @@ const featuresList = [
 ];
 
 const FeatureMain = () => {
-  return <Features featuresList={featuresList} />;
+  return (
+    <section id="donation" className="scroll-mt-8">
+      <Features featuresList={featuresList} />
+    </section>
+  );
 };
 
 export default FeatureMain;

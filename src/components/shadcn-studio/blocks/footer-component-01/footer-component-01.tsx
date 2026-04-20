@@ -54,7 +54,7 @@ const Footer = () => {
           <a href="#" className="hover:underline">
             GoodDeed Foundation
           </a>
-          , Made with ❤️ for better web.
+          , Made with ❤️ for Solution Challenge.
         </p>
       </div>
     </footer>
