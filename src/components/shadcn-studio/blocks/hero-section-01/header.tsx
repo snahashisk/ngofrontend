@@ -18,6 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 
 import Logo from "@/components/shadcn-studio/logo";
+import Link from "next/link";
 
 export type NavigationSection = {
   title: string;
@@ -56,13 +57,13 @@ const Header = ({ navigationData, className }: HeaderProps) => {
 
         {/* Login Button */}
         <Button className="rounded-lg max-md:hidden" asChild>
-          <a href="/login">Login</a>
+          <Link href="/login">Login</Link>
         </Button>
 
         {/* Navigation for small screens */}
         <div className="flex gap-4 md:hidden">
           <Button className="rounded-lg" asChild>
-            <a href="/login">Login</a>
+            <Link href="/login">Login</Link>
           </Button>
 
           <DropdownMenu>

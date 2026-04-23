@@ -57,7 +57,9 @@ const HeroSection = () => {
         </p>
 
         <Button size="lg" asChild>
-          <a href="/register">Try It Now</a>
+          <Link href="/signup" className="cursor-pointer">
+            Try It Now
+          </Link>
         </Button>
       </div>
 
