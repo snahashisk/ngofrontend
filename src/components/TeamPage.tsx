@@ -2,8 +2,8 @@ import Team from "@/components/shadcn-studio/blocks/team-section-01/team-section
 
 const teamMembers = [
   {
-    image: "https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/team/image-1.png",
-    alt: "Phillip Bothman",
+    image: "/snahashis.jpg",
+    alt: "Snahashis Kanrar",
     name: "Snahashis Kanrar",
     role: "Founder & CEO",
     description: "A visionary leader driving innovation and collaboration.",
@@ -15,8 +15,8 @@ const teamMembers = [
     },
   },
   {
-    image: "https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/team/image-2.png",
-    alt: "James Kenter",
+    image: "/koustav.jpeg",
+    alt: "Koustav Das",
     name: "Koustav Das",
     role: "Engineering Manager",
     description: "Leading teams to build smart, scalable solutions.",
@@ -28,8 +28,8 @@ const teamMembers = [
     },
   },
   {
-    image: "https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/team/image-3.png",
-    alt: "Cristofer Kenter",
+    image: "/shalini.jpeg",
+    alt: "Shalini Mukherjee",
     name: "Shalini Mukherjee",
     role: "Product Designer",
     description: "Crafting intuitive and engaging user experiences.",
@@ -41,63 +41,11 @@ const teamMembers = [
     },
   },
   {
-    image: "https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/team/image-4.png",
-    alt: "Alena Lubin",
+    image: "/sweety.jpeg",
+    alt: "Sweety Nag",
     name: "Sweety Nag",
     role: "Frontend Developer",
     description: "Bringing designs to life with seamless interfaces.",
-    socialLinks: {
-      facebook: "#",
-      twitter: "#",
-      github: "#",
-      instagram: "#",
-    },
-  },
-  {
-    image: "https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/team/image-8.png",
-    alt: "Jayden Lipshultz",
-    name: "Jayden Lipshultz",
-    role: "Sales Lead",
-    description: "Driving business growth and strong client relationships.",
-    socialLinks: {
-      facebook: "#",
-      twitter: "#",
-      github: "#",
-      instagram: "#",
-    },
-  },
-  {
-    image: "https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/team/image-7.png",
-    alt: "Maria Donin",
-    name: "Maria Donin",
-    role: "Product Manager",
-    description: "Bridging business needs with impactful solutions.",
-    socialLinks: {
-      facebook: "#",
-      twitter: "#",
-      github: "#",
-      instagram: "#",
-    },
-  },
-  {
-    image: "https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/team/image-6.png",
-    alt: "Carter Saris",
-    name: "Carter Saris",
-    role: "UX Researcher",
-    description: "Uncovering insights to enhance user experiences.",
-    socialLinks: {
-      facebook: "#",
-      twitter: "#",
-      github: "#",
-      instagram: "#",
-    },
-  },
-  {
-    image: "https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/team/image-5.png",
-    alt: "Ahmad Donin",
-    name: "Ahmad Donin",
-    role: "Customer Success",
-    description: "Ensuring customer satisfaction and long-term success.",
     socialLinks: {
       facebook: "#",
       twitter: "#",

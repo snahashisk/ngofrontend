@@ -37,8 +37,8 @@ const Team = ({ teamMembers }: { teamMembers: TeamMember }) => {
               className="hover:border-primary overflow-hidden py-0 shadow-none transition-colors duration-300"
             >
               <CardContent className="px-0">
-                <div className="bg-muted pt-10">
-                  <img src={member.image} alt={member.alt} className="mx-auto h-60 w-auto" />
+                <div className="bg-muted">
+                  <img src={member.image} alt={member.alt} className="mx-auto h-full w-full" />
                 </div>
                 <div className="space-y-3 p-6">
                   <CardTitle className="text-lg">{member.name}</CardTitle>

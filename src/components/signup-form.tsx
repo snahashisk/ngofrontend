@@ -83,20 +83,17 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"form">
     if (idProof) {
       formData.append("idProof", idProof);
     }
-    formData.forEach((value, key) => {
-      console.log(key, value);
-    });
     // send to backend
     try {
       const response = await axios.post("http://localhost:8000/api/v1/user/register", formData, {
         withCredentials: true,
       });
       toast.success("User registered successfully");
-      console.log(response.data);
       const userId = response.data.data._id;
       router.push(`/verifyemail/${userId}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      toast.error(error.response.data.message);
     }
   };
 
