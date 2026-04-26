@@ -1,5 +1,5 @@
 "use client";
-
+import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa6";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { DataTable } from "@/components/data-table";
@@ -8,14 +8,23 @@ import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import DataTableWithColumnFilterDemo from "@/components/shadcn-studio/data-table/data-table-04";
 import { useState, useEffect } from "react";
+import { Separator } from "@/components/ui/separator";
 import axios from "axios";
+import { useUserStore } from "@/store/user";
 
 import data from "./data.json";
 
+import DashboardFooter from "@/components/ui/dashboardFooter";
+
 export default function Page() {
+  const userId = useUserStore((state) => state.user?._id);
+
   //fetch all reports
   const [reports, setReports] = useState([]);
   const [pendingReports, setPendingReports] = useState([]);
+  const [verifiedReports, setVerifiedReports] = useState([]);
+  const [inProgressReports, setInProgressReports] = useState([]);
+  const [joinedReports, setJoinedReports] = useState([]);
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -23,12 +32,26 @@ export default function Page() {
         withCredentials: true,
       });
       setReports(response.data.data);
-      const pendingReports = response.data.data.filter((report: any) => report.isVerified === false);
+      const pendingReports = response.data.data.filter(
+        (report: any) => report.isVerified === false && report.status !== "Rejected",
+      );
+      const verifiedReports = response.data.data.filter(
+        (report: any) => report.isVerified === true && report.status === "Verified",
+      );
+      const inProgressReports = response.data.data.filter(
+        (report: any) => report.isVerified === true && report.status === "InProgress",
+      );
+      const joinedReports = inProgressReports.filter(
+        (report: any) =>
+          report.isVerified === true && report.status === "InProgress" && report.assignedMembers.includes(userId),
+      );
       setPendingReports(pendingReports);
+      setVerifiedReports(verifiedReports);
+      setInProgressReports(inProgressReports);
+      setJoinedReports(joinedReports);
     };
     fetchReports();
-  }, []);
-
+  }, [userId]);
   return (
     <SidebarProvider
       style={
@@ -48,13 +71,27 @@ export default function Page() {
               <div className="px-4 lg:px-6">
                 <ChartAreaInteractive />
               </div>
+              <Separator />
+              <div className="px-4 lg:px-6">
+                <DataTableWithColumnFilterDemo data={joinedReports} status="joined" />
+              </div>
+              <Separator />
+              <div className="px-4 lg:px-6">
+                <DataTableWithColumnFilterDemo data={inProgressReports} status="inprogress" />
+              </div>
+              <Separator />
+              <div className="px-4 lg:px-6">
+                <DataTableWithColumnFilterDemo data={verifiedReports} status="verified" />
+              </div>
+              <Separator />
               <div className="px-4 lg:px-6">
                 <DataTableWithColumnFilterDemo data={pendingReports} status="pending" />
               </div>
-              <DataTable data={data} />
+              {/* <DataTable data={data} /> */}
             </div>
           </div>
         </div>
+        <DashboardFooter />
       </SidebarInset>
     </SidebarProvider>
   );

@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import axios from "axios";
 
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useRouter } from "next/navigation";
 import {
   Drawer,
   DrawerClose,
@@ -64,95 +65,8 @@ type Item = {
   status: string;
 };
 
-const columns: ColumnDef<Item>[] = [
-  {
-    id: "select",
-    header: () => null,
-    cell: () => <MdOutlineOpenInNew className="text-base cursor-pointer" />,
-  },
-  {
-    header: "Title",
-    accessorKey: "title",
-    cell: ({ row }) => {
-      return <TableCellViewer item={row.original} status={row.original.status} />;
-    },
-  },
-  {
-    header: "Address",
-    accessorKey: "address",
-    cell: ({ row }) => <div>{row.getValue("address")}</div>,
-    // enableSorting: false,
-    // meta: {
-    //   filterVariant: "range",
-    // },
-  },
-  {
-    header: "Urgency Level",
-    accessorKey: "urgencyLevel",
-    cell: ({ row }) => {
-      const urgencyLevel = row.getValue("urgencyLevel") as string;
-
-      const styles = {
-        High: "bg-yellow-600/10 text-yellow-600 focus-visible:ring-yellow-600/20 dark:bg-yellow-400/10 dark:text-yellow-400 dark:focus-visible:ring-yellow-400/40 [a&]:hover:bg-yellow-600/5 dark:[a&]:hover:bg-yellow-400/5",
-        Low: "bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5",
-        Medium:
-          "bg-blue-600/10 text-blue-600 focus-visible:ring-blue-600/20 dark:bg-blue-400/10 dark:text-blue-400 dark:focus-visible:ring-blue-400/40 [a&]:hover:bg-blue-600/5 dark:[a&]:hover:bg-blue-400/5",
-        Critical:
-          "bg-red-600/10 text-red-600 focus-visible:ring-red-600/20 dark:bg-red-400/10 dark:text-red-400 dark:focus-visible:ring-red-400/40 [a&]:hover:bg-red-600/5 dark:[a&]:hover:bg-red-400/5",
-        "Not specified":
-          "bg-gray-600/10 text-gray-600 focus-visible:ring-gray-600/20 dark:bg-gray-400/10 dark:text-gray-400 dark:focus-visible:ring-gray-400/40 [a&]:hover:bg-gray-600/5 dark:[a&]:hover:bg-gray-400/5",
-      }[urgencyLevel];
-
-      return (
-        <Badge className={(cn("border-none focus-visible:outline-none"), styles)}>{row.getValue("urgencyLevel")}</Badge>
-      );
-    },
-    enableSorting: false,
-    meta: {
-      filterVariant: "select",
-    },
-  },
-  {
-    header: "Category",
-    accessorKey: "category",
-    cell: ({ row }) => <div>{row.getValue("category")}</div>,
-  },
-  {
-    header: "Affected People",
-    accessorKey: "affectedPeople",
-    cell: ({ row }) => <div>{row.getValue("affectedPeople")}</div>,
-    meta: {
-      filterVariant: "range",
-    },
-  },
-  {
-    header: "Created At",
-    accessorKey: "createdAt",
-    cell: ({ row }) => {
-      const date = row.getValue("createdAt") as string;
-
-      return (
-        <div>
-          {new Date(date).toLocaleDateString("en-IN", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          })}
-        </div>
-      );
-    },
-    sortingFn: (rowA, rowB) => {
-      return new Date(rowA.original.createdAt).getTime() - new Date(rowB.original.createdAt).getTime();
-    },
-  },
-  {
-    header: "Reported By",
-    accessorKey: "reporterName",
-    cell: ({ row }) => <div>{row.getValue("reporterName")}</div>,
-  },
-];
-
 const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) => {
+  const router = useRouter();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const [sorting, setSorting] = useState<SortingState>([
@@ -161,6 +75,103 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
       desc: true,
     },
   ]);
+
+  const columns: ColumnDef<Item>[] = [
+    {
+      id: "select",
+      header: () => null,
+      cell: ({ row }: { row: any }) => (
+        <MdOutlineOpenInNew
+          className="text-base cursor-pointer"
+          onClick={() => {
+            router.push(`/dashboard/reportdetail/${row.original._id}`);
+          }}
+        />
+      ),
+    },
+    {
+      header: "Title",
+      accessorKey: "title",
+      cell: ({ row }) => {
+        return <TableCellViewer item={row.original} sectionStatus={props.status} />;
+      },
+    },
+    {
+      header: "Address",
+      accessorKey: "address",
+      cell: ({ row }) => <div>{row.getValue("address")}</div>,
+      // enableSorting: false,
+      // meta: {
+      //   filterVariant: "range",
+      // },
+    },
+    {
+      header: "Urgency Level",
+      accessorKey: "urgencyLevel",
+      cell: ({ row }) => {
+        const urgencyLevel = row.getValue("urgencyLevel") as string;
+
+        const styles = {
+          High: "bg-yellow-600/10 text-yellow-600 focus-visible:ring-yellow-600/20 dark:bg-yellow-400/10 dark:text-yellow-400 dark:focus-visible:ring-yellow-400/40 [a&]:hover:bg-yellow-600/5 dark:[a&]:hover:bg-yellow-400/5",
+          Low: "bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5",
+          Medium:
+            "bg-blue-600/10 text-blue-600 focus-visible:ring-blue-600/20 dark:bg-blue-400/10 dark:text-blue-400 dark:focus-visible:ring-blue-400/40 [a&]:hover:bg-blue-600/5 dark:[a&]:hover:bg-blue-400/5",
+          Critical:
+            "bg-red-600/10 text-red-600 focus-visible:ring-red-600/20 dark:bg-red-400/10 dark:text-red-400 dark:focus-visible:ring-red-400/40 [a&]:hover:bg-red-600/5 dark:[a&]:hover:bg-red-400/5",
+          "Not specified":
+            "bg-gray-600/10 text-gray-600 focus-visible:ring-gray-600/20 dark:bg-gray-400/10 dark:text-gray-400 dark:focus-visible:ring-gray-400/40 [a&]:hover:bg-gray-600/5 dark:[a&]:hover:bg-gray-400/5",
+        }[urgencyLevel];
+
+        return (
+          <Badge className={(cn("border-none focus-visible:outline-none"), styles)}>
+            {row.getValue("urgencyLevel")}
+          </Badge>
+        );
+      },
+      enableSorting: false,
+      meta: {
+        filterVariant: "select",
+      },
+    },
+    {
+      header: "Category",
+      accessorKey: "category",
+      cell: ({ row }) => <div>{row.getValue("category")}</div>,
+    },
+    {
+      header: "Affected People",
+      accessorKey: "affectedPeople",
+      cell: ({ row }) => <div>{row.getValue("affectedPeople")}</div>,
+      meta: {
+        filterVariant: "range",
+      },
+    },
+    {
+      header: "Created At",
+      accessorKey: "createdAt",
+      cell: ({ row }) => {
+        const date = row.getValue("createdAt") as string;
+
+        return (
+          <div>
+            {new Date(date).toLocaleDateString("en-IN", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })}
+          </div>
+        );
+      },
+      sortingFn: (rowA, rowB) => {
+        return new Date(rowA.original.createdAt).getTime() - new Date(rowB.original.createdAt).getTime();
+      },
+    },
+    {
+      header: "Reported By",
+      accessorKey: "reporterName",
+      cell: ({ row }) => <div>{row.getValue("reporterName")}</div>,
+    },
+  ];
 
   const table = useReactTable({
     data: props.data,
@@ -183,12 +194,47 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
   return (
     <div className="w-full">
       <div className="rounded-md border">
-        <div className="flex flex-wrap gap-3 px-2 py-6">
-          <div className="w-44 pl-4">
-            <Filter column={table.getColumn("title")!} />
+        <div className="flex flex-wrap gap-2 justify-between px-6 py-6">
+          <div className="flex flex-col gap-1">
+            {props.status === "pending" && (
+              <>
+                <span className="text-lg font-semibold">Cases Awaiting Verification</span>
+                <span className="text-muted-foreground text-sm">Here you can verify and take action on new cases</span>
+              </>
+            )}
+
+            {props.status === "verified" && (
+              <>
+                <span className="text-lg font-semibold">Cases Needing Volunteers</span>
+                <span className="text-muted-foreground text-sm">
+                  These cases are verified and waiting for volunteers
+                </span>
+              </>
+            )}
+
+            {props.status === "inprogress" && (
+              <>
+                <span className="text-lg font-semibold">Ongoing Cases</span>
+                <span className="text-muted-foreground text-sm">
+                  These cases are currently being handled by volunteers
+                </span>
+              </>
+            )}
+
+            {props.status === "joined" && (
+              <>
+                <span className="text-lg font-semibold">My Assigned Cases</span>
+                <span className="text-muted-foreground text-sm">Cases you have joined and are responsible for.</span>
+              </>
+            )}
           </div>
-          <div className="w-44">
-            <Filter column={table.getColumn("urgencyLevel")!} />
+          <div className="flex gap-1">
+            <div className="w-44 lg:w-56">
+              <Filter column={table.getColumn("title")!} />
+            </div>
+            <div className="w-36 lg:w-56">
+              <Filter column={table.getColumn("urgencyLevel")!} />
+            </div>
           </div>
         </div>
         <Table>
@@ -227,7 +273,7 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
         </Table>
       </div>
 
-      <p className="text-muted-foreground mt-4 text-center text-sm">Data table with column filter</p>
+      {/* <p className="text-muted-foreground mt-4 text-center text-sm">Data table with column filter</p> */}
     </div>
   );
 };
@@ -342,7 +388,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
 
 export default DataTableWithColumnFilterDemo;
 
-function TableCellViewer({ item, status }: { item: any; status: string }) {
+function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: string }) {
   const isMobile = useIsMobile();
 
   const handleApprove = async () => {
@@ -381,6 +427,22 @@ function TableCellViewer({ item, status }: { item: any; status: string }) {
     }
   };
 
+  const handleJoin = async () => {
+    try {
+      await axios.post(
+        "http://localhost:8000/api/v1/report/join",
+        {
+          reportId: item._id,
+        },
+        { withCredentials: true },
+      );
+      toast.success("Successfully joined the report!");
+    } catch (error: any) {
+      const message = error?.response?.data?.message || "Something went wrong";
+      toast.error(message);
+    }
+  };
+
   return (
     <Drawer direction={isMobile ? "right" : "right"}>
       <DrawerTrigger asChild>
@@ -392,7 +454,38 @@ function TableCellViewer({ item, status }: { item: any; status: string }) {
       <DrawerContent className="overflow-y-auto overflow-x-hidden">
         <DrawerHeader>
           <DrawerTitle>{item.title}</DrawerTitle>
-          <DrawerDescription>{item.category}</DrawerDescription>
+          <DrawerDescription>
+            {item.category}{" "}
+            {sectionStatus == "joined" && (
+              <Badge
+                variant="default"
+                className="ml-2 bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300"
+              >
+                {item.status}
+              </Badge>
+            )}
+            {sectionStatus == "pending" && (
+              <Badge
+                variant="default"
+                className="ml-2 bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300"
+              >
+                {item.status}
+              </Badge>
+            )}
+            {sectionStatus == "inprogress" && (
+              <Badge
+                variant="default"
+                className="ml-2 bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300"
+              >
+                {item.status}
+              </Badge>
+            )}
+            {sectionStatus == "verified" && (
+              <Badge variant="default" className=" bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                {item.status}
+              </Badge>
+            )}
+          </DrawerDescription>
         </DrawerHeader>
 
         <div className="flex flex-col gap-4 px-4 text-sm">
@@ -403,9 +496,9 @@ function TableCellViewer({ item, status }: { item: any; status: string }) {
             <strong>Description:</strong>
             <p>{item.description}</p>
           </div>
-          {status !== "Pending" && (
+          {sectionStatus !== "pending" && (
             <div>
-              <strong>Steps to resolve:</strong>
+              <strong>Steps to Resolve:</strong>
               <p>{item.stepsToResolve}</p>
             </div>
           )}
@@ -437,16 +530,40 @@ function TableCellViewer({ item, status }: { item: any; status: string }) {
             <strong>Created At:</strong>
             <p>{new Date(item.createdAt).toLocaleString()}</p>
           </div>
+          <Separator />
+          {sectionStatus == "verified" && (
+            <div className="flex flex-col gap-1">
+              <div>
+                <strong>Responsibility of Captain:</strong>
+                <p>Lead volunteers, manage tasks, and ensure the case is completed.</p>
+              </div>
+              <div>
+                <strong>Responsibility of Volunteer:</strong>
+                <p>Help volunteers, coordinate with authorities, and ensure the case is resolved efficiently.</p>
+              </div>
+            </div>
+          )}
         </div>
 
         <DrawerFooter>
-          {status === "Pending" && (
+          {sectionStatus === "pending" && (
             <>
               <Button variant="default" className="text-white cursor-pointer" onClick={handleApprove}>
                 Approve
               </Button>
               <Button variant="destructive" className="cursor-pointer" onClick={handleReject}>
                 Reject
+              </Button>
+            </>
+          )}
+
+          {sectionStatus === "verified" && (
+            <>
+              <Button variant="default" className=" cursor-pointer">
+                Join as Captain
+              </Button>
+              <Button variant="secondary" className=" cursor-pointer" onClick={handleJoin}>
+                Join as Volunteer
               </Button>
             </>
           )}

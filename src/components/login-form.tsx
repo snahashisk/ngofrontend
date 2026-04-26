@@ -29,6 +29,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"form">)
       );
       toast.success("User logged in successfully");
       const { user } = response.data.data;
+      console.log(user);
       setUser(user);
       router.push("/dashboard");
     } catch (error: any) {
