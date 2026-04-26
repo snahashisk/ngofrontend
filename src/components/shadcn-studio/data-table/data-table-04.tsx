@@ -33,6 +33,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
+import Dialog13 from "../dialog/dialog-13";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -198,14 +199,25 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
           <div className="flex flex-col gap-1">
             {props.status === "pending" && (
               <>
-                <span className="text-lg font-semibold">Cases Awaiting Verification</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-semibold">Cases Awaiting Verification</span>
+                  <Badge className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300">
+                    Verification Pending
+                  </Badge>
+                </div>
                 <span className="text-muted-foreground text-sm">Here you can verify and take action on new cases</span>
               </>
             )}
 
             {props.status === "verified" && (
               <>
-                <span className="text-lg font-semibold">Cases Needing Volunteers</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-semibold">Cases Needing Volunteers</span>
+
+                  <Badge className="bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300">
+                    Waiting for Volunteers
+                  </Badge>
+                </div>
                 <span className="text-muted-foreground text-sm">
                   These cases are verified and waiting for volunteers
                 </span>
@@ -214,7 +226,12 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
 
             {props.status === "inprogress" && (
               <>
-                <span className="text-lg font-semibold">Ongoing Cases</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-semibold">Ongoing Cases</span>
+                  <Badge className="bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300">
+                    Ongoing
+                  </Badge>
+                </div>
                 <span className="text-muted-foreground text-sm">
                   These cases are currently being handled by volunteers
                 </span>
@@ -223,8 +240,23 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
 
             {props.status === "joined" && (
               <>
-                <span className="text-lg font-semibold">My Assigned Cases</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-semibold">My Assigned Cases</span>
+                  <Badge className="bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300">
+                    Assigned
+                  </Badge>
+                </div>
                 <span className="text-muted-foreground text-sm">Cases you have joined and are responsible for.</span>
+              </>
+            )}
+
+            {props.status === "resolved" && (
+              <>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-semibold">Resolved Cases</span>
+                  <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">Resolved</Badge>
+                </div>
+                <span className="text-muted-foreground text-sm">Cases that have been resolved.</span>
               </>
             )}
           </div>
@@ -564,6 +596,23 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
               </Button>
               <Button variant="secondary" className=" cursor-pointer" onClick={handleJoin}>
                 Join as Volunteer
+              </Button>
+            </>
+          )}
+
+          {sectionStatus === "inprogress" && (
+            <>
+              <Button variant="default" className=" cursor-pointer" onClick={handleJoin}>
+                Join as Volunteer
+              </Button>
+            </>
+          )}
+
+          {sectionStatus === "joined" && (
+            <>
+              <Dialog13 data={item} />
+              <Button variant="secondary" className=" cursor-pointer">
+                Open Team Chat
               </Button>
             </>
           )}

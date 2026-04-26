@@ -1,3 +1,4 @@
+"use client";
 import { SearchIcon, ArrowRightIcon, CalendarDaysIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export type BlogPost = {
   title: string;
   description: string;
-  imageUrl: string;
+  imageOfReport: string;
   imageAlt: string;
   date: string;
   category: string;
@@ -20,11 +21,29 @@ export type BlogPost = {
   categoryLink: string;
 };
 
+type ReportTypes = {
+  title: string;
+  description: string;
+  imageOfReport: string;
+  imageAlt: string;
+  date: string;
+  category: string;
+  author: string;
+  authorLink: string;
+  blogLink: string;
+  categoryLink: string;
+  createdAt: string;
+};
+
 type BlogProps = {
   blogPosts: BlogPost[];
 };
 
-const BlogGrid = ({ posts }: { posts: BlogPost[] }) => {
+type ReportProps = {
+  report: ReportTypes[];
+};
+
+const BlogGrid = ({ posts }: { posts: ReportTypes[] }) => {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {posts.map((post, index) => (
@@ -33,7 +52,7 @@ const BlogGrid = ({ posts }: { posts: BlogPost[] }) => {
             <div className="mb-6 overflow-hidden rounded-lg sm:mb-12">
               <a href={post.blogLink}>
                 <img
-                  src={post.imageUrl}
+                  src={post.imageOfReport}
                   alt={post.imageAlt}
                   className="h-59.5 w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
@@ -42,7 +61,14 @@ const BlogGrid = ({ posts }: { posts: BlogPost[] }) => {
             <div className="flex items-center justify-between gap-1.5">
               <div className="text-muted-foreground flex items-center gap-1.5">
                 <CalendarDaysIcon className="size-6" />
-                <span>{post.date}</span>
+                <span>
+                  {post.createdAt &&
+                    new Date(post.createdAt).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                </span>
               </div>
               <a href={post.categoryLink}>
                 <Badge className="bg-primary/10 text-primary rounded-full border-0 text-sm">{post.category}</Badge>
@@ -75,20 +101,27 @@ const BlogGrid = ({ posts }: { posts: BlogPost[] }) => {
   );
 };
 
-const Blog = ({ blogPosts }: BlogProps) => {
-  const categories = ["All", "Product", "Design", "Startup Growth"];
+const Blog = ({ report }: ReportProps) => {
+  //get all the unique categories
+  const categories = [
+    "All",
+    ...new Set(
+      report.map((item) => {
+        return item.category;
+      }),
+    ),
+  ];
 
   return (
     <section className="py-8 sm:py-16 lg:py-24">
       <div className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:space-y-16 lg:px-8">
         {/* Header */}
         <div className="space-y-4 text-center">
-          <h2 className="text-2xl font-semibold md:text-3xl lg:text-4xl">Donate Support to Make Difference way</h2>
+          <h2 className="text-2xl font-semibold md:text-3xl lg:text-4xl">Our Initiatives</h2>
 
           <p className="text-muted-foreground text-lg md:text-xl">
-            Charity is the voluntary act of giving help, typically in the form of money, time, or resources, to those in
-            need. Charitable organizations aim to solve social, environmental, and economic challenges by addressing
-            issues like poverty
+            Discover how we’re making a difference in the lives of those who need it most. Through our various programs
+            and projects, we strive to bring hope, support, and positive change to communities everywhere.
           </p>
         </div>
 
@@ -125,13 +158,13 @@ const Blog = ({ blogPosts }: BlogProps) => {
 
           {/* All Posts Tab */}
           <TabsContent value="All">
-            <BlogGrid posts={blogPosts} />
+            <BlogGrid posts={report} />
           </TabsContent>
 
           {/* Category-specific Tabs */}
           {categories.slice(1).map((category, index) => (
             <TabsContent key={index} value={category}>
-              <BlogGrid posts={blogPosts.filter((post) => post.category === category)} />
+              <BlogGrid posts={report.filter((post) => post.category === category)} />
             </TabsContent>
           ))}
         </Tabs>

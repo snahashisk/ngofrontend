@@ -143,7 +143,7 @@ const FormLayout = () => {
             <Label htmlFor="visibility">Report Category</Label>
             <Select defaultValue="Disaster Relief" value={category} onValueChange={(value) => setCategory(value)}>
               <SelectTrigger id="visibility" className="w-full">
-                <SelectValue placeholder="Select visibility" />
+                <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>

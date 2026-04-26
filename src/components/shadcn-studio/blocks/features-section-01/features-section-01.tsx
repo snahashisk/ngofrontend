@@ -38,10 +38,11 @@ const Features = ({ featuresList }: { featuresList: Features }) => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 space-y-4 sm:mb-16 lg:mb-24 text-center">
-          <h2 className="text-2xl font-semibold md:text-3xl lg:text-4xl">Our Initiatives</h2>
+          <h2 className="text-2xl font-semibold md:text-3xl lg:text-4xl">Donate Support to Make Difference way</h2>
           <p className="text-muted-foreground text-xl">
-            Discover how we’re making a difference in the lives of those who need it most. Through our various programs
-            and projects, we strive to bring hope, support, and positive change to communities everywhere.
+            Charity is the voluntary act of giving help, typically in the form of money, time, or resources, to those in
+            need. Charitable organizations aim to solve social, environmental, and economic challenges by addressing
+            issues like poverty
           </p>
           <Button variant="outline" className="rounded-lg text-base shadow-none has-[>svg]:px-6" size="lg" asChild>
             <a href="#">

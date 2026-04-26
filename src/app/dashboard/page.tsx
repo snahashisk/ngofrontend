@@ -25,6 +25,7 @@ export default function Page() {
   const [verifiedReports, setVerifiedReports] = useState([]);
   const [inProgressReports, setInProgressReports] = useState([]);
   const [joinedReports, setJoinedReports] = useState([]);
+  const [resolvedReports, setResolvedReports] = useState([]);
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -39,16 +40,21 @@ export default function Page() {
         (report: any) => report.isVerified === true && report.status === "Verified",
       );
       const inProgressReports = response.data.data.filter(
-        (report: any) => report.isVerified === true && report.status === "InProgress",
+        (report: any) =>
+          report.isVerified === true && report.status === "InProgress" && !report.assignedMembers.includes(userId),
       );
-      const joinedReports = inProgressReports.filter(
+      const joinedReports = response.data.data.filter(
         (report: any) =>
           report.isVerified === true && report.status === "InProgress" && report.assignedMembers.includes(userId),
+      );
+      const resolvedReports = response.data.data.filter(
+        (report: any) => report.isVerified === true && report.status === "Resolved",
       );
       setPendingReports(pendingReports);
       setVerifiedReports(verifiedReports);
       setInProgressReports(inProgressReports);
       setJoinedReports(joinedReports);
+      setResolvedReports(resolvedReports);
     };
     fetchReports();
   }, [userId]);
@@ -68,9 +74,6 @@ export default function Page() {
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               <SectionCards />
-              <div className="px-4 lg:px-6">
-                <ChartAreaInteractive />
-              </div>
               <Separator />
               <div className="px-4 lg:px-6">
                 <DataTableWithColumnFilterDemo data={joinedReports} status="joined" />
@@ -86,6 +89,10 @@ export default function Page() {
               <Separator />
               <div className="px-4 lg:px-6">
                 <DataTableWithColumnFilterDemo data={pendingReports} status="pending" />
+              </div>
+              <Separator />
+              <div className="px-4 lg:px-6">
+                <DataTableWithColumnFilterDemo data={resolvedReports} status="resolved" />
               </div>
               {/* <DataTable data={data} /> */}
             </div>
