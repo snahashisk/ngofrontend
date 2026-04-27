@@ -12,7 +12,8 @@ import { Input } from "@/components/ui/input";
 import { IoIosSend } from "react-icons/io";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useEffect } from "react";
+import { io, type Socket } from "socket.io-client";
+import { useEffect, useRef } from "react";
 import axios from "axios";
 
 type Message = {
@@ -30,10 +31,41 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
   const resolvedParams = use(params);
   const { reportid } = resolvedParams;
   const userId = useUserStore((state) => state.user?._id);
-  const fullName = useUserStore((state) => state.user?.fullName);
-  const userEmail = useUserStore((state) => state.user?.email);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
+
+  const socketRef = useRef<Socket | null>(null);
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
+  const [isTyping, setIsTyping] = useState(false);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const appendMessage = (message: Message) => {
+    setMessages((prev) => (prev.some((existing) => existing._id === message._id) ? prev : [...prev, message]));
+  };
+
+  useEffect(() => {
+    socketRef.current = io("http://localhost:8000", {
+      withCredentials: true,
+    });
+
+    // join room
+    socketRef.current.emit("join_room", reportid);
+
+    // listen for messages
+    socketRef.current.on("new_message", appendMessage);
+
+    socketRef.current.on("someone_typing", () => {
+      setIsTyping(true);
+    });
+
+    socketRef.current.on("stop_typing", () => {
+      setIsTyping(false);
+    });
+
+    return () => {
+      socketRef.current?.disconnect();
+    };
+  }, [reportid]);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -55,24 +87,26 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
     fetchMessages();
   }, [reportid]);
 
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   const handleSendMessage = async () => {
     if (newMessage.trim() === "") return;
-    try {
-      const response = await axios.post(
-        `http://localhost:8000/api/v1/message/`,
-        {
-          reportId: reportid,
-          content: newMessage,
-        },
-        { withCredentials: true },
-      );
-      setMessages((prevMessages) => [...prevMessages, response.data.data]);
-      setNewMessage("");
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-  };
 
+    const response = await axios.post(
+      `http://localhost:8000/api/v1/message/`,
+      {
+        reportId: reportid,
+        content: newMessage,
+      },
+      { withCredentials: true },
+    );
+
+    const savedMessage = response.data.data as Message;
+    appendMessage(savedMessage);
+    setNewMessage("");
+  };
   return (
     <SidebarProvider
       style={
@@ -90,14 +124,16 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
             <Card className="flex flex-col w-full flex-1 min-h-0 overflow-hidden">
               <CardHeader>
                 <CardTitle>Team Chat</CardTitle>
-                <CardDescription>Chat with your team members</CardDescription>
+                <CardDescription className="text-primary">
+                  {isTyping ? "Someone is typing..." : "Chat with your team members"}
+                </CardDescription>
               </CardHeader>
               <CardContent className="flex-1 overflow-y-auto min-h-0">
-                <div className="flex gap-2 flex-col">
-                  {messages.map((msg: any) => {
+                <div className="flex gap-3 flex-col">
+                  {messages.map((msg: Message) => {
                     const isMe = msg.sender === userId;
                     return (
-                      <div key={msg._id} className={`flex gap-2 items-end ${isMe ? "justify-end" : "justify-start"}`}>
+                      <div key={msg._id} className={`flex gap-3 items-end ${isMe ? "justify-end" : "justify-start"}`}>
                         {!isMe && (
                           <Avatar>
                             <AvatarFallback>
@@ -129,6 +165,7 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
                       </div>
                     );
                   })}
+                  <div ref={messageEndRef} />
                 </div>
               </CardContent>
               <CardFooter>
@@ -138,7 +175,19 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
                     placeholder="Type your message..."
                     className="bg-white"
                     value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
+                    onChange={(e) => {
+                      setNewMessage(e.target.value);
+
+                      socketRef.current?.emit("typing", reportid);
+
+                      if (typingTimeoutRef.current) {
+                        clearTimeout(typingTimeoutRef.current);
+                      }
+
+                      typingTimeoutRef.current = setTimeout(() => {
+                        socketRef.current?.emit("stop_typing", reportid);
+                      }, 1000);
+                    }}
                   />
                   <Button className="cursor-pointer" onClick={handleSendMessage}>
                     Send <IoIosSend />
