@@ -67,7 +67,7 @@ const DialogSignUpDemo = ({ data }: { data: any }) => {
             <DialogTitle>Final Report</DialogTitle>
             <DialogDescription>Please fill the form to submit the final report.</DialogDescription>
           </DialogHeader>
-          <div className="mb-2 space-y-2">
+          <div className="my-4 space-y-2 text-center">
             <h2 className="text-xl font-semibold">{data.title}</h2>
             <p className="text-muted-foreground">{data.description}</p>
           </div>
@@ -127,7 +127,7 @@ const DialogSignUpDemo = ({ data }: { data: any }) => {
                 <FieldDescription>Choose a image for your report.</FieldDescription>
               </Field>
             </div>
-            <div className="flex flex-col items-start gap-2 sm:col-span-2">
+            <div className="flex flex-col items-start gap-2 sm:col-span-2 mb-4">
               <Field>
                 <FieldLabel htmlFor="input-field-username">Remarks</FieldLabel>
                 <Input

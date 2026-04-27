@@ -19,6 +19,7 @@ import { IndianStates } from "@/constant";
 import { professions } from "@/constant";
 import { educations } from "@/constant";
 import { contributionAreas } from "@/constant";
+import { Spinner } from "@/components/ui/spinner";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -51,11 +52,13 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"form">
   const districts = stateData?.districts || [];
   const districtData = districts.find((d) => d.name === selectedDistrict);
   const areas = districtData?.areas || [];
+  const [isLoading, setIsLoading] = useState(false);
 
   const passwordError = confirmPassword && password !== confirmPassword ? "Passwords do not match" : "";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     if (password !== confirmPassword) {
       return;
     }
@@ -90,10 +93,12 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"form">
       });
       toast.success("User registered successfully");
       const userId = response.data.data._id;
+      setIsLoading(false);
       router.push(`/verifyemail/${userId}`);
     } catch (error: any) {
       console.error(error);
       toast.error(error.response.data.message);
+      setIsLoading(false);
     }
   };
 
@@ -401,9 +406,13 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"form">
         </div>
 
         <Field>
-          <Button type="submit" className="cursor-pointer">
-            Create Account
-          </Button>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <Button type="submit" className="cursor-pointer">
+              Create Account
+            </Button>
+          )}
         </Field>
         <FieldSeparator>Or continue with</FieldSeparator>
         <Field>

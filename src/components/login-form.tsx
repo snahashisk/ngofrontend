@@ -7,16 +7,19 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/user";
+import { Spinner } from "@/components/ui/spinner";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"form">) {
   const setUser = useUserStore((state) => state.setUser);
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const response = await axios.post(
         "http://localhost:8000/api/v1/user/login",
         {
@@ -29,8 +32,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"form">)
       );
       toast.success("User logged in successfully");
       const { user } = response.data.data;
-      console.log(user);
       setUser(user);
+      setLoading(false);
       router.push("/dashboard");
     } catch (error: any) {
       console.error(error);
@@ -78,7 +81,13 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"form">)
           />
         </Field>
         <Field>
-          <Button type="submit">Login</Button>
+          {loading ? (
+            <Button disabled>
+              <Spinner />
+            </Button>
+          ) : (
+            <Button type="submit">Login</Button>
+          )}
         </Field>
         <FieldSeparator>Or continue with</FieldSeparator>
         <Field>

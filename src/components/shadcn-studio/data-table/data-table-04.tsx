@@ -34,10 +34,7 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import Dialog13 from "../dialog/dialog-13";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -195,7 +192,7 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
   return (
     <div className="w-full">
       <div className="rounded-md border">
-        <div className="flex flex-wrap gap-2 justify-between px-6 py-6">
+        <div className="flex flex-wrap gap-2 justify-between px-6 py-4">
           <div className="flex flex-col gap-1">
             {props.status === "pending" && (
               <>
@@ -475,6 +472,11 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
     }
   };
 
+  const router = useRouter();
+  const handleOpenChat = () => {
+    router.push(`/dashboard/reportdetail/${item._id}/teamchat`);
+  };
+
   return (
     <Drawer direction={isMobile ? "right" : "right"}>
       <DrawerTrigger asChild>
@@ -611,7 +613,7 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
           {sectionStatus === "joined" && (
             <>
               <Dialog13 data={item} />
-              <Button variant="secondary" className=" cursor-pointer">
+              <Button variant="secondary" className=" cursor-pointer" onClick={handleOpenChat}>
                 Open Team Chat
               </Button>
             </>
