@@ -9,7 +9,7 @@ const Events = () => {
 
   useEffect(() => {
     const fetchReports = async () => {
-      const response = await axios.get("https://ngo.kanrarmc.fun/api/v1/report/sixMostRecentReports");
+      const response = await axiosInstance.get("api/v1/report/sixMostRecentReports");
       setReports(response.data.data);
     };
     fetchReports();
