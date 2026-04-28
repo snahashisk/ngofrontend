@@ -64,7 +64,7 @@ const HeroSection = () => {
       </div>
 
       {/* Image */}
-      <img src="/image-18.png" alt="Dishes" className="min-h-67 w-full object-cover" />
+      <img src="/image-20.png" alt="Dishes" className="min-h-67 w-full object-cover" />
     </section>
   );
 };
