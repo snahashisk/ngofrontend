@@ -3,30 +3,31 @@ import type { TestimonialItem } from "@/components/shadcn-studio/blocks/testimon
 
 const testimonials: TestimonialItem[] = [
   {
-    name: "Craig Bator",
+    name: "Snahashis Kanrar",
     role: "CEO & Co Founder",
     company: "Zendesk",
     avatar: "https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-1.png?width=40&height=40&format=auto",
     rating: 5,
     content:
-      "I've been using shadcn/studio for a year now and it's made managing my finances so much easier and quick.",
+      "GoodDeed has been a game-changer for our organization. The platform's user-friendly interface and powerful features have made it easier than ever to manage our charitable initiatives and connect with donors.",
   },
   {
-    name: "Martin Dorwart",
+    name: "Koustav Das",
     role: "Product manager",
     company: "Orbit",
     avatar: "https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-2.png?width=40&height=40&format=auto",
     rating: 4,
-    content: "With shadcn/studio, I can easily track my investments and see how they're performing in real-time.",
+    content:
+      "The team at GoodDeed has been incredibly responsive and supportive. They truly care about their users and are always looking for ways to improve the platform based on feedback.",
   },
   {
-    name: "Sarah Johnson",
+    name: "Sweety Nag",
     role: "Lead Designer",
     company: "Figma",
     avatar: "https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-3.png?width=40&height=40&format=auto",
     rating: 5,
     content:
-      "The UI components are beautifully designed and incredibly easy to customize. It's transformed our design workflow.",
+      "As a designer, I appreciate the attention to detail in GoodDeed's user interface. The platform is not only functional but also visually appealing, making it a pleasure to use.",
   },
   {
     name: "Alex Chen",
@@ -35,7 +36,7 @@ const testimonials: TestimonialItem[] = [
     avatar: "https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-4.png?width=40&height=40&format=auto",
     rating: 4,
     content:
-      "shadcn/studio has saved us countless hours in development. The component library is comprehensive and well-documented.",
+      "GoodDeed has streamlined our workflow and improved our ability to track and manage our charitable efforts. The analytics features have been particularly helpful in understanding our impact and making data-driven decisions.",
   },
 ];
 

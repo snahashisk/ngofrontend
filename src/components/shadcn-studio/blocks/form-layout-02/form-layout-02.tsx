@@ -9,10 +9,10 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/store/user";
 import { useState } from "react";
-import axios from "axios";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Spinner } from "@/components/ui/spinner";
 
 import { IndianStates } from "@/constant";
 import { countries } from "@/constant";
@@ -48,10 +48,11 @@ const FormLayout = () => {
   const districts = stateData?.districts || [];
   const districtData = districts.find((d) => d.name === selectedDistrict);
   const areas = districtData?.areas || [];
+  const [loading, setloading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setloading(true);
     const formData = new FormData();
 
     formData.append("title", reporttitle);
@@ -80,6 +81,8 @@ const FormLayout = () => {
       router.push(`/dashboard`);
     } catch (error) {
       console.error(error);
+    } finally {
+      setloading(false);
     }
   };
 
@@ -329,12 +332,25 @@ const FormLayout = () => {
       <Separator className="my-10" />
 
       <div className="flex justify-end gap-3">
-        <Button type="button" variant="outline" className="w-full sm:w-auto">
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full sm:w-auto cursor-pointer"
+          onClick={() => {
+            router.push(`/dashboard`);
+          }}
+        >
           Cancel
         </Button>
-        <Button type="submit" className="w-full sm:w-auto">
-          Save Changes
-        </Button>
+        {loading ? (
+          <Button disabled className="w-full sm:w-auto cursor-pointer">
+            <Spinner /> Processing
+          </Button>
+        ) : (
+          <Button type="submit" className="w-full sm:w-auto">
+            Submit Report
+          </Button>
+        )}
       </div>
     </form>
   );

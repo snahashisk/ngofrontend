@@ -36,6 +36,10 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
       .catch((err) => console.error(err));
   }, [reportid]);
 
+  const handleOpenChat = () => {
+    router.push(`/dashboard/reportdetail/${reportid}/teamchat`);
+  };
+
   return (
     <SidebarProvider
       style={
@@ -138,7 +142,7 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
                     {data?.status === "InProgress" && data?.assignedMembers?.includes(userId) && (
                       <>
                         <Dialog13 data={data} />
-                        <Button variant="secondary" className=" cursor-pointer">
+                        <Button variant="secondary" className=" cursor-pointer" onClick={handleOpenChat}>
                           Open Team Chat
                         </Button>
                       </>
