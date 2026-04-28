@@ -54,20 +54,6 @@ const Features = ({ featuresList }: { featuresList: Features }) => {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featuresList.map((features, index) => (
-            // <Card key={index} className={cn('shadow-none transition-colors duration-300', features.cardBorderColor)}>
-            //   <CardContent>
-            //     <Avatar className='mb-6 size-10 rounded-md'>
-            //       <AvatarFallback
-            //         className={cn('rounded-md [&>svg]:size-6', features.avatarBgColor, features.avatarTextColor)}
-            //       >
-            //         <features.icon />
-            //       </AvatarFallback>
-            //     </Avatar>
-            //     <h6 className='mb-2 text-lg font-semibold'>{features.title}</h6>
-            //     <p className='text-muted-foreground'>{features.description}</p>
-            //   </CardContent>
-            // </Card>
-
             <Card key={index} className="relative mx-auto w-full max-w-sm pt-0">
               <div className="absolute inset-0 z-30 aspect-video" />
               <img

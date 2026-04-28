@@ -31,6 +31,7 @@ import {
   FileChartColumnIcon,
   FileIcon,
   CommandIcon,
+  Ambulance,
 } from "lucide-react";
 import { useUserStore } from "@/store/user";
 
@@ -47,9 +48,9 @@ const data = {
       icon: <LayoutDashboardIcon />,
     },
     {
-      title: "Lifecycle",
-      url: "#",
-      icon: <ListIcon />,
+      title: "Emergency Contacts",
+      url: "/dashboard/emergencycontact",
+      icon: <Ambulance />,
     },
     {
       title: "Analytics",
