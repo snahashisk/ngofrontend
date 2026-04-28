@@ -10,8 +10,8 @@ export default function LoginPage() {
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
           <Link href="/" className="flex items-center gap-2 font-medium">
-            <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <GalleryVerticalEndIcon className="size-4" />
+            <div className="flex size-6 items-center justify-center rounded-md text-primary-foreground">
+              <img src="/logo-3.png" alt="GoodDeed Foundation" width={50} height={50} className="rounded-full" />
             </div>
             GoodDeed Foundation.
           </Link>
