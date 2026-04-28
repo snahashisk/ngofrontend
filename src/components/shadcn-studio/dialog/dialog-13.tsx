@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { useState } from "react";
 import axios from "axios";
+import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
 
 const DialogSignUpDemo = ({ data }: { data: any }) => {
@@ -41,7 +42,7 @@ const DialogSignUpDemo = ({ data }: { data: any }) => {
         formData.append("image", verificationPhoto);
       }
 
-      const response = await axios.post("http://localhost:8000/api/v1/finalreport/create", formData, {
+      const response = await axiosInstance.post("/api/v1/finalreport/create", formData, {
         withCredentials: true,
       });
       if (response.data.success) {

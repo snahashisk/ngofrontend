@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { useState, useEffect, use } from "react";
 import axios from "axios";
+import axiosInstance from "@/lib/axios";
 
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/user";
@@ -23,8 +24,8 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
   const [steps, setSteps] = useState<string[]>([]);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8000/api/v1/report/reports/${reportid}`, {
+    axiosInstance
+      .get(`/api/v1/report/reports/${reportid}`, {
         withCredentials: true,
       })
       .then((res) => {

@@ -6,6 +6,7 @@ import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import axios from "axios";
+import axiosInstance from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -22,7 +23,7 @@ export function OTPForm({ className, userId, ...props }: OTPFormProps) {
     e.preventDefault();
     if (otp.length !== 6) return;
     try {
-      await axios.post("http://localhost:8000/api/v1/user/verify", {
+      await axiosInstance.post("/api/v1/user/verify", {
         userId,
         otp,
       });

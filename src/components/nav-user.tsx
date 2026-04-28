@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
 import {
   DropdownMenu,
@@ -31,7 +31,7 @@ export function NavUser({
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8000/api/v1/user/logout", {}, { withCredentials: true });
+      await axiosInstance.post("/api/v1/user/logout", {}, { withCredentials: true });
 
       toast.success("Logged out successfully");
 

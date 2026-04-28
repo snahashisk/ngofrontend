@@ -19,6 +19,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import axios from "axios";
+import axiosInstance from "@/lib/axios";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useRouter } from "next/navigation";
@@ -422,8 +423,8 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
 
   const handleApprove = async () => {
     try {
-      await axios.post(
-        "http://localhost:8000/api/v1/report/vote",
+      await axiosInstance.post(
+        "/api/v1/report/vote",
         {
           reportId: item._id,
           type: "positive",
@@ -441,8 +442,8 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
 
   const handleReject = async () => {
     try {
-      await axios.post(
-        "http://localhost:8000/api/v1/report/vote",
+      await axiosInstance.post(
+        "/api/v1/report/vote",
         {
           reportId: item._id,
           type: "negative",
@@ -458,8 +459,8 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
 
   const handleJoin = async () => {
     try {
-      await axios.post(
-        "http://localhost:8000/api/v1/report/join",
+      await axiosInstance.post(
+        "/api/v1/report/join",
         {
           reportId: item._id,
         },

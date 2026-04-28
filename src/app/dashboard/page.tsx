@@ -7,7 +7,9 @@ import DataTableWithColumnFilterDemo from "@/components/shadcn-studio/data-table
 import { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
+import axiosInstance from "@/lib/axios";
 import { useUserStore } from "@/store/user";
+import { toast } from "sonner";
 
 import DashboardFooter from "@/components/ui/dashboardFooter";
 
@@ -24,32 +26,37 @@ export default function Page() {
 
   useEffect(() => {
     const fetchReports = async () => {
-      const response = await axios.get("http://localhost:8000/api/v1/report/reports", {
-        withCredentials: true,
-      });
-      setReports(response.data.data);
-      const pendingReports = response.data.data.filter(
-        (report: any) => report.isVerified === false && report.status !== "Rejected",
-      );
-      const verifiedReports = response.data.data.filter(
-        (report: any) => report.isVerified === true && report.status === "Verified",
-      );
-      const inProgressReports = response.data.data.filter(
-        (report: any) =>
-          report.isVerified === true && report.status === "InProgress" && !report.assignedMembers.includes(userId),
-      );
-      const joinedReports = response.data.data.filter(
-        (report: any) =>
-          report.isVerified === true && report.status === "InProgress" && report.assignedMembers.includes(userId),
-      );
-      const resolvedReports = response.data.data.filter(
-        (report: any) => report.isVerified === true && report.status === "Resolved",
-      );
-      setPendingReports(pendingReports);
-      setVerifiedReports(verifiedReports);
-      setInProgressReports(inProgressReports);
-      setJoinedReports(joinedReports);
-      setResolvedReports(resolvedReports);
+      try {
+        const response = await axiosInstance.get("/api/v1/report/reports", {
+          withCredentials: true,
+        });
+        setReports(response.data.data);
+        const pendingReports = response.data.data.filter(
+          (report: any) => report.isVerified === false && report.status !== "Rejected",
+        );
+        const verifiedReports = response.data.data.filter(
+          (report: any) => report.isVerified === true && report.status === "Verified",
+        );
+        const inProgressReports = response.data.data.filter(
+          (report: any) =>
+            report.isVerified === true && report.status === "InProgress" && !report.assignedMembers.includes(userId),
+        );
+        const joinedReports = response.data.data.filter(
+          (report: any) =>
+            report.isVerified === true && report.status === "InProgress" && report.assignedMembers.includes(userId),
+        );
+        const resolvedReports = response.data.data.filter(
+          (report: any) => report.isVerified === true && report.status === "Resolved",
+        );
+        setPendingReports(pendingReports);
+        setVerifiedReports(verifiedReports);
+        setInProgressReports(inProgressReports);
+        setJoinedReports(joinedReports);
+        setResolvedReports(resolvedReports);
+      } catch (error) {
+        toast.error("Something went wrong");
+        console.error(error);
+      }
     };
     fetchReports();
   }, [userId]);

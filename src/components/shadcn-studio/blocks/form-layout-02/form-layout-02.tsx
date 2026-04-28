@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/store/user";
 import { useState } from "react";
 import axios from "axios";
+import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -72,7 +73,7 @@ const FormLayout = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8000/api/v1/report/report", formData, {
+      const response = await axiosInstance.post("/api/v1/report/report", formData, {
         withCredentials: true,
       });
       toast.success("Report submitted successfully");

@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/user";
 import { Spinner } from "@/components/ui/spinner";
+import axiosInstance from "@/lib/axios";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"form">) {
   const setUser = useUserStore((state) => state.setUser);
@@ -20,8 +21,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"form">)
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/user/login",
+      const response = await axiosInstance.post(
+        "/api/v1/user/login",
         {
           email,
           password,
@@ -37,11 +38,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"form">)
       router.push("/dashboard");
     } catch (error: any) {
       console.error(error);
-      if (error.response.data.message) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Something went wrong");
-      }
+      toast.error("Something went wrong");
     }
   };
 

@@ -4,6 +4,8 @@ import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from 
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import axios from "axios";
+import axiosInstance from "@/lib/axios";
+
 import {
   Combobox,
   ComboboxContent,
@@ -88,7 +90,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"form">
     }
     // send to backend
     try {
-      const response = await axios.post("http://localhost:8000/api/v1/user/register", formData, {
+      const response = await axiosInstance.post("/api/v1/user/register", formData, {
         withCredentials: true,
       });
       toast.success("User registered successfully");

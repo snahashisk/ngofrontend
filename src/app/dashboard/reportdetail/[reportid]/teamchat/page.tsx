@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { io, type Socket } from "socket.io-client";
 import { useEffect, useRef } from "react";
 import axios from "axios";
+import axiosInstance from "@/lib/axios";
 
 type Message = {
   _id: string;
@@ -44,7 +45,7 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
   };
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:8000", {
+    socketRef.current = io(`${process.env.NEXT_PUBLIC_API_BASE_URL}`, {
       withCredentials: true,
     });
 
@@ -70,12 +71,9 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const url = `http://localhost:8000/api/v1/message/report/${reportid}`;
-        console.log("Fetching messages from URL:", url);
-        const response = await axios
-          .get(`http://localhost:8000/api/v1/message/report/${reportid}`, { withCredentials: true })
+        const response = await axiosInstance
+          .get(`/api/v1/message/report/${reportid}`, { withCredentials: true })
           .then((res) => {
-            console.log("Messages fetched successfully:", res.data.data);
             return res;
           });
         setMessages(response.data.data);
@@ -94,8 +92,8 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
   const handleSendMessage = async () => {
     if (newMessage.trim() === "") return;
 
-    const response = await axios.post(
-      `http://localhost:8000/api/v1/message/`,
+    const response = await axiosInstance.post(
+      "/api/v1/message/",
       {
         reportId: reportid,
         content: newMessage,
