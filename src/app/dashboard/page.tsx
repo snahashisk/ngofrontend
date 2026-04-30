@@ -38,7 +38,8 @@ export default function Page() {
           (report: any) => report.isVerified === true && report.status === "Verified",
         );
         const inProgressReports = response.data.data.filter(
-          (report: any) => report.isVerified === true && report.status === "InProgress",
+          (report: any) =>
+            report.isVerified === true && report.status === "InProgress" && !report.assignedMembers.includes(userId),
         );
         const joinedReports = response.data.data.filter(
           (report: any) =>
