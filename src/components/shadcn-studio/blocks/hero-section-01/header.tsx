@@ -32,7 +32,9 @@ type HeaderProps = {
 
 const Header = ({ navigationData, className }: HeaderProps) => {
   return (
-    <header className={cn("bg-background sticky top-0 z-50 h-16 border-b", className)}>
+    <header
+      className={cn("bg-background sticky top-0 z-50 h-16 border-b", className)}
+    >
       <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <a href="#">
@@ -56,7 +58,7 @@ const Header = ({ navigationData, className }: HeaderProps) => {
         </NavigationMenu>
 
         {/* Login Button */}
-        <Button className="rounded-lg max-md:hidden" asChild>
+        <Button className="rounded-lg max-md:hidden " asChild>
           <Link href="/login">Login</Link>
         </Button>
 

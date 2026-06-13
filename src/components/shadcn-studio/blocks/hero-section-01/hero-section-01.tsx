@@ -10,7 +10,9 @@ const HeroSection = () => {
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 text-center sm:px-6 lg:px-8">
         <div className="bg-muted flex items-center gap-2.5 rounded-full border px-3 py-2">
           <Badge>AI-Powered</Badge>
-          <span className="text-muted-foreground">Platform Connecting Volunteers</span>
+          <span className="text-muted-foreground">
+            Platform Connecting Volunteers
+          </span>
         </div>
 
         <h1 className="text-3xl leading-[1.29167] font-bold text-balance sm:text-4xl lg:text-5xl">
@@ -51,20 +53,33 @@ const HeroSection = () => {
         </h1>
 
         <p className="text-muted-foreground">
-          Empowering your organization with intelligent automation and seamless operations.
+          Empowering your organization with intelligent automation and seamless
+          operations.
           <br />
           Focus on your mission, we&apos;ll handle the technology.
         </p>
-
-        <Button size="lg" asChild>
-          <Link href="/signup" className="cursor-pointer">
-            Register Now
-          </Link>
-        </Button>
+        <div className="flex flex-col gap-2">
+          <Button
+            variant="outline"
+            className="rounded-lg max-md:hidden"
+            asChild
+          >
+            <Link href="/report">Submit a Report</Link>
+          </Button>
+          <Button size="lg" asChild>
+            <Link href="/signup" className="cursor-pointer">
+              Register Now
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Image */}
-      <img src="/image-20.png" alt="Dishes" className="min-h-67 w-full object-cover" />
+      <img
+        src="/image-20.png"
+        alt="Dishes"
+        className="min-h-67 w-full object-cover"
+      />
     </section>
   );
 };

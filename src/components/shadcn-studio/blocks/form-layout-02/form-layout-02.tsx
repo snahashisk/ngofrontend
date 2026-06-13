@@ -4,7 +4,14 @@ import { MailIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/store/user";
@@ -25,11 +32,36 @@ import {
   ComboboxList,
 } from "@/components/ui/combobox";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+
 const FormLayout = () => {
   const router = useRouter();
 
   const fullName = useUserStore((state) => state.user?.fullName);
   const email = useUserStore((state) => state.user?.email);
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [otp, setOtp] = useState("");
 
   const [reporttitle, setReportTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -56,8 +88,8 @@ const FormLayout = () => {
     const formData = new FormData();
 
     formData.append("title", reporttitle);
-    formData.append("reporterName", fullName || "");
-    formData.append("reporterEmail", email || "");
+    formData.append("reporterName", fullName || firstName + " " + lastName);
+    formData.append("reporterEmail", email || userEmail);
     formData.append("category", category);
     formData.append("description", reportDescription);
     formData.append("affectedPeople", affectedpeople);
@@ -74,13 +106,75 @@ const FormLayout = () => {
     }
 
     try {
-      const response = await axiosInstance.post("/api/v1/report/report", formData, {
-        withCredentials: true,
-      });
-      toast.success("Report submitted successfully");
-      router.push(`/dashboard`);
+      if (email) {
+        const response = await axiosInstance.post(
+          "/api/v1/report/report",
+          formData,
+          {
+            withCredentials: true,
+          },
+        );
+        toast.success("Report submitted successfully");
+        router.push(`/dashboard`);
+      } else if (isEmailVerified) {
+        const response = await axiosInstance.post(
+          "/api/v1/report/anonymous-report",
+          formData,
+          {
+            withCredentials: true,
+          },
+        );
+        toast.success("Report submitted successfully");
+        router.push(`/`);
+      } else {
+        toast.error("Please verify your email address");
+      }
     } catch (error) {
       console.error(error);
+    } finally {
+      setloading(false);
+    }
+  };
+
+  const handleSendAnonymousOtp = async () => {
+    setloading(true);
+    try {
+      const response = await axiosInstance.post(
+        "/api/v1/anonymous/sendotp",
+        {
+          fullName: (fullName || "") + " " + (lastName ? lastName : ""),
+          email: userEmail || "",
+        },
+        {
+          withCredentials: true,
+        },
+      );
+      toast.success("OTP sent successfully");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setloading(false);
+    }
+  };
+
+  const handleVerifyAnonymousOtp = async () => {
+    setloading(true);
+    try {
+      const response = await axiosInstance.post(
+        "/api/v1/anonymous/verifyotp",
+        {
+          email: userEmail || "",
+          otp: otp || "",
+        },
+        {
+          withCredentials: true,
+        },
+      );
+      toast.success("OTP verified successfully");
+      setIsEmailVerified(true);
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.response.data.message);
     } finally {
       setloading(false);
     }
@@ -92,32 +186,174 @@ const FormLayout = () => {
       <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
         <div className="space-y-1">
           <h2 className="font-semibold">Personal Information</h2>
-          <p className="text-muted-foreground text-sm">Enter your contact details and address information.</p>
+          <p className="text-muted-foreground text-sm">
+            Enter your contact details and address information.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:col-span-2">
           <div className="flex flex-col items-start gap-2">
             <Label htmlFor="first-name">First Name</Label>
-            <Input id="first-name" placeholder={`${fullName?.split(" ")[0]}`} readOnly />
-            <p className="text-muted-foreground text-xs">Your legal first name</p>
+            {fullName ? (
+              <Input
+                id="first-name"
+                placeholder={`${fullName?.split(" ")[0]}`}
+                value={fullName?.split(" ")[0]}
+                readOnly
+              />
+            ) : (
+              <Input
+                id="first-name"
+                placeholder="First Name"
+                value={firstName || ""}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            )}
+            <p className="text-muted-foreground text-xs">
+              Your legal first name
+            </p>
           </div>
 
           <div className="flex flex-col items-start gap-2">
             <Label htmlFor="last-name">Last Name</Label>
-            <Input id="last-name" placeholder={`${fullName?.split(" ")[1]}`} readOnly />
-            <p className="text-muted-foreground text-xs">Your legal last name</p>
+            {fullName ? (
+              <Input
+                id="last-name"
+                placeholder={`${fullName?.split(" ")[1]}`}
+                value={fullName?.split(" ")[1]}
+                readOnly
+              />
+            ) : (
+              <Input
+                id="last-name"
+                placeholder="Last Name"
+                value={lastName || ""}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            )}
+            <p className="text-muted-foreground text-xs">
+              Your legal last name
+            </p>
           </div>
 
           <div className="flex flex-col gap-2 sm:col-span-2">
             <Label htmlFor="email">Email Address</Label>
             <div className="relative">
-              <Input id="email" type="email" placeholder={`${email}`} className="peer pr-9" readOnly />
-              <div className="text-muted-foreground pointer-events-none absolute inset-y-0 right-0 flex items-center justify-center pr-3 peer-disabled:opacity-50">
+              {email ? (
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder={`${email}`}
+                  value={email}
+                  className="peer pr-9"
+                  readOnly
+                />
+              ) : (
+                <div className="flex gap-2">
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder={`Enter your email`}
+                    className="peer pr-9"
+                    value={userEmail || ""}
+                    onChange={(e) => {
+                      setUserEmail(e.target.value);
+                      setIsEmailVerified(false);
+                    }}
+                  />
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      {isEmailVerified ? (
+                        <Button
+                          variant="secondary"
+                          className="cursor-pointer"
+                          disabled
+                        >
+                          Verified
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="secondary"
+                          className="cursor-pointer"
+                          onClick={handleSendAnonymousOtp}
+                        >
+                          Verify
+                        </Button>
+                      )}
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-sm">
+                      <DialogHeader>
+                        <DialogTitle>Verify your email</DialogTitle>
+                        <DialogDescription>
+                          Enter the code sent to your email address. Do not
+                          refresh the page.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <FieldGroup className="gap-4">
+                        <Field className="gap-4">
+                          <InputOTP
+                            id="recoveryCode"
+                            maxLength={6}
+                            value={otp}
+                            onChange={(value) => setOtp(value)}
+                          >
+                            <InputOTPGroup className="w-full justify-center gap-4 *:data-[slot=input-otp-slot]:rounded-lg *:data-[slot=input-otp-slot]:border">
+                              <InputOTPSlot
+                                index={0}
+                                className="input-size-lg"
+                              />
+                              <InputOTPSlot
+                                index={1}
+                                className="input-size-lg"
+                              />
+                              <InputOTPSlot
+                                index={2}
+                                className="input-size-lg"
+                              />
+                              <InputOTPSlot
+                                index={3}
+                                className="input-size-lg"
+                              />
+                              <InputOTPSlot
+                                index={4}
+                                className="input-size-lg"
+                              />
+                              <InputOTPSlot
+                                index={5}
+                                className="input-size-lg"
+                              />
+                            </InputOTPGroup>
+                          </InputOTP>
+                        </Field>
+                      </FieldGroup>
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button variant="outline" className="cursor-pointer">
+                            Cancel
+                          </Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                          <Button
+                            type="submit"
+                            className="cursor-pointer"
+                            onClick={handleVerifyAnonymousOtp}
+                          >
+                            Verify Email
+                          </Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              )}
+              {/* <div className="text-muted-foreground pointer-events-none absolute inset-y-0 right-0 flex items-center justify-center pr-3 peer-disabled:opacity-50">
                 <MailIcon className="size-4" />
                 <span className="sr-only">Email</span>
-              </div>
+              </div> */}
             </div>
-            <p className="text-muted-foreground text-xs">We&apos;ll never share your email with anyone else</p>
+            <p className="text-muted-foreground text-xs">
+              We&apos;ll never share your email with anyone else
+            </p>
           </div>
         </div>
       </div>
@@ -128,7 +364,9 @@ const FormLayout = () => {
       <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
         <div className="space-y-1">
           <h2 className="font-semibold">Report Details</h2>
-          <p className="text-muted-foreground text-sm">Provide basic information about the issue you want to report.</p>
+          <p className="text-muted-foreground text-sm">
+            Provide basic information about the issue you want to report.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:col-span-2">
@@ -140,12 +378,18 @@ const FormLayout = () => {
               value={reporttitle}
               onChange={(e) => setReportTitle(e.target.value)}
             />
-            <p className="text-muted-foreground text-xs">Give a short and clear title describing the issue</p>
+            <p className="text-muted-foreground text-xs">
+              Give a short and clear title describing the issue
+            </p>
           </div>
 
           <div className="flex flex-col gap-2">
             <Label htmlFor="visibility">Report Category</Label>
-            <Select defaultValue="Disaster Relief" value={category} onValueChange={(value) => setCategory(value)}>
+            <Select
+              defaultValue="Disaster Relief"
+              value={category}
+              onValueChange={(value) => setCategory(value)}
+            >
               <SelectTrigger id="visibility" className="w-full">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
@@ -153,22 +397,36 @@ const FormLayout = () => {
                 <SelectGroup>
                   <SelectItem value="Food Shortage">Food Shortage</SelectItem>
                   <SelectItem value="Water Crisis">Water Crisis</SelectItem>
-                  <SelectItem value="Medical Emergency">Medical Emergency</SelectItem>
+                  <SelectItem value="Medical Emergency">
+                    Medical Emergency
+                  </SelectItem>
                   <SelectItem value="Shelter Needed">Shelter Needed</SelectItem>
-                  <SelectItem value="Disaster Relief">Disaster Relief</SelectItem>
-                  <SelectItem value="Education Support">Education Support</SelectItem>
-                  <SelectItem value="Sanitation Issue">Sanitation Issue</SelectItem>
-                  <SelectItem value="Women & Child Safety">Women & Child Safety</SelectItem>
-                  <SelectItem value="Elderly Support">Elderly Support</SelectItem>
+                  <SelectItem value="Disaster Relief">
+                    Disaster Relief
+                  </SelectItem>
+                  <SelectItem value="Education Support">
+                    Education Support
+                  </SelectItem>
+                  <SelectItem value="Sanitation Issue">
+                    Sanitation Issue
+                  </SelectItem>
+                  <SelectItem value="Women & Child Safety">
+                    Women & Child Safety
+                  </SelectItem>
+                  <SelectItem value="Elderly Support">
+                    Elderly Support
+                  </SelectItem>
                   <SelectItem value="Animal Welfare">Animal Welfare</SelectItem>
-                  <SelectItem value="Environmental Issue">Environmental Issue</SelectItem>
+                  <SelectItem value="Environmental Issue">
+                    Environmental Issue
+                  </SelectItem>
                   <SelectItem value="Other">Other</SelectItem>
-                  <SelectItem value="public">Public - Anyone can view</SelectItem>
-                  <SelectItem value="private">Private - Only team members</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <p className="text-muted-foreground text-xs">Control who can access your workspace</p>
+            <p className="text-muted-foreground text-xs">
+              Control who can access your workspace
+            </p>
           </div>
           <div className="flex flex-col items-start gap-2 sm:col-span-2">
             <Label htmlFor="address">Address</Label>
@@ -178,7 +436,9 @@ const FormLayout = () => {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
             />
-            <p className="text-muted-foreground text-xs">Street address with apartment or suite number</p>
+            <p className="text-muted-foreground text-xs">
+              Street address with apartment or suite number
+            </p>
           </div>
 
           <div className="flex flex-col items-start gap-2">
@@ -189,7 +449,9 @@ const FormLayout = () => {
               value={landmark}
               onChange={(e) => setLandmark(e.target.value)}
             />
-            <p className="text-muted-foreground text-xs">Optional nearby landmark for easier location</p>
+            <p className="text-muted-foreground text-xs">
+              Optional nearby landmark for easier location
+            </p>
           </div>
 
           <div className="flex flex-col items-start gap-2">
@@ -289,7 +551,12 @@ const FormLayout = () => {
 
           <div className="flex flex-col items-start gap-2">
             <Label htmlFor="pincode">Pincode</Label>
-            <Input id="pincode" placeholder="Pincode" value={pincode} onChange={(e) => setPincode(e.target.value)} />
+            <Input
+              id="pincode"
+              placeholder="Pincode"
+              value={pincode}
+              onChange={(e) => setPincode(e.target.value)}
+            />
           </div>
 
           <div className="flex flex-col items-start gap-2">
@@ -301,7 +568,9 @@ const FormLayout = () => {
               value={affectedpeople}
               onChange={(e) => setAffectedPeople(e.target.value)}
             />
-            <p className="text-muted-foreground text-xs">Provide an estimation of the number of affected people.</p>
+            <p className="text-muted-foreground text-xs">
+              Provide an estimation of the number of affected people.
+            </p>
           </div>
 
           <div className="flex flex-col items-start gap-2">
@@ -312,7 +581,9 @@ const FormLayout = () => {
               accept="image/*"
               onChange={(e) => setSupportingImage(e.target.files?.[0] || null)}
             />
-            <p className="text-muted-foreground text-xs">Supported formats: JPG, PNG, Maximum size 5MB</p>
+            <p className="text-muted-foreground text-xs">
+              Supported formats: JPG, PNG, Maximum size 5MB
+            </p>
           </div>
 
           <div className="flex flex-col gap-2 sm:col-span-2">
@@ -324,7 +595,9 @@ const FormLayout = () => {
               value={reportDescription}
               onChange={(e) => setReportDescription(e.target.value)}
             />
-            <p className="text-muted-foreground text-xs">Provide detailed description of the report.</p>
+            <p className="text-muted-foreground text-xs">
+              Provide detailed description of the report.
+            </p>
           </div>
         </div>
       </div>
