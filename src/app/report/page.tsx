@@ -64,10 +64,6 @@ const ReportPage = () => {
               GoodDeed Foundation
             </span>
           </a>
-
-          <Button size="lg" className="rounded-full" asChild>
-            <a href="#">Book table</a>
-          </Button>
         </div>
       </header>
 
