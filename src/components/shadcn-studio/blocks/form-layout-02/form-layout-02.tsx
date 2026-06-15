@@ -15,7 +15,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/store/user";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -75,6 +75,59 @@ const FormLayout = () => {
   const [pincode, setPincode] = useState("");
   const [country, setCountry] = useState("");
   const [supportingimage, setSupportingImage] = useState<File | null>(null);
+  const [location, setLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+
+  const getLocation = () => {
+    if (typeof window !== "undefined" && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+          toast.success("Location fetched successfully");
+        },
+        (error) => {
+          toast.error("Failed to fetch location");
+          console.error(error);
+        },
+      );
+    } else {
+      toast.error("Please enable location services");
+    }
+  };
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  const getCoordinatesPromise = (): Promise<{
+    lat: number;
+    lng: number;
+  } | null> => {
+    return new Promise((resolve) => {
+      if (typeof window === "undefined" || !navigator.geolocation) {
+        resolve(null);
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error(error);
+          resolve(null);
+        },
+        { timeout: 5000 },
+      );
+    });
+  };
 
   const stateData = IndianStates.find((s) => s.name === selectedState);
   const districts = stateData?.districts || [];
@@ -85,6 +138,15 @@ const FormLayout = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setloading(true);
+
+    let currentLoc = location;
+    if (!currentLoc) {
+      currentLoc = await getCoordinatesPromise();
+      if (currentLoc) {
+        setLocation(currentLoc);
+      }
+    }
+
     const formData = new FormData();
 
     formData.append("title", reporttitle);
@@ -100,6 +162,9 @@ const FormLayout = () => {
     formData.append("state", selectedState);
     formData.append("pinCode", pincode);
     formData.append("country", country);
+    if (currentLoc) {
+      formData.append("location", `${currentLoc.lat},${currentLoc.lng}`);
+    }
 
     if (supportingimage) {
       formData.append("imageOfReport", supportingimage);

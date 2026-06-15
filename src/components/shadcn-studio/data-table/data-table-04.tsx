@@ -5,7 +5,13 @@ import { useId, useMemo, useState } from "react";
 
 import { SearchIcon } from "lucide-react";
 
-import type { Column, ColumnDef, ColumnFiltersState, RowData, SortingState } from "@tanstack/react-table";
+import type {
+  Column,
+  ColumnDef,
+  ColumnFiltersState,
+  RowData,
+  SortingState,
+} from "@tanstack/react-table";
 import {
   flexRender,
   getCoreRowModel,
@@ -38,10 +44,24 @@ import Dialog13 from "../dialog/dialog-13";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 import { cn } from "@/lib/utils";
+import Maps from "@/components/Maps";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -64,7 +84,10 @@ type Item = {
   status: string;
 };
 
-const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) => {
+const DataTableWithColumnFilterDemo = (props: {
+  data: any[];
+  status: string;
+}) => {
   const router = useRouter();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -92,7 +115,9 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
       header: "Title",
       accessorKey: "title",
       cell: ({ row }) => {
-        return <TableCellViewer item={row.original} sectionStatus={props.status} />;
+        return (
+          <TableCellViewer item={row.original} sectionStatus={props.status} />
+        );
       },
     },
     {
@@ -122,7 +147,9 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
         }[urgencyLevel];
 
         return (
-          <Badge className={(cn("border-none focus-visible:outline-none"), styles)}>
+          <Badge
+            className={(cn("border-none focus-visible:outline-none"), styles)}
+          >
             {row.getValue("urgencyLevel")}
           </Badge>
         );
@@ -162,7 +189,10 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
         );
       },
       sortingFn: (rowA, rowB) => {
-        return new Date(rowA.original.createdAt).getTime() - new Date(rowB.original.createdAt).getTime();
+        return (
+          new Date(rowA.original.createdAt).getTime() -
+          new Date(rowB.original.createdAt).getTime()
+        );
       },
     },
     {
@@ -198,19 +228,25 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
             {props.status === "pending" && (
               <>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-semibold">Cases Awaiting Verification</span>
+                  <span className="text-lg font-semibold">
+                    Cases Awaiting Verification
+                  </span>
                   <Badge className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300">
                     Verification Pending
                   </Badge>
                 </div>
-                <span className="text-muted-foreground text-sm">Here you can verify and take action on new cases</span>
+                <span className="text-muted-foreground text-sm">
+                  Here you can verify and take action on new cases
+                </span>
               </>
             )}
 
             {props.status === "verified" && (
               <>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-semibold">Cases Needing Volunteers</span>
+                  <span className="text-lg font-semibold">
+                    Cases Needing Volunteers
+                  </span>
 
                   <Badge className="bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300">
                     Waiting for Volunteers
@@ -239,12 +275,16 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
             {props.status === "joined" && (
               <>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-semibold">My Assigned Cases</span>
+                  <span className="text-lg font-semibold">
+                    My Assigned Cases
+                  </span>
                   <Badge className="bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300">
                     Assigned
                   </Badge>
                 </div>
-                <span className="text-muted-foreground text-sm">Cases you have joined and are responsible for.</span>
+                <span className="text-muted-foreground text-sm">
+                  Cases you have joined and are responsible for.
+                </span>
               </>
             )}
 
@@ -252,9 +292,13 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
               <>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-semibold">Resolved Cases</span>
-                  <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">Resolved</Badge>
+                  <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                    Resolved
+                  </Badge>
                 </div>
-                <span className="text-muted-foreground text-sm">Cases that have been resolved.</span>
+                <span className="text-muted-foreground text-sm">
+                  Cases that have been resolved.
+                </span>
               </>
             )}
           </div>
@@ -273,8 +317,16 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
               <TableRow key={headerGroup.id} className="bg-muted/50">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="relative h-10 border-t select-none pl-6">
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    <TableHead
+                      key={header.id}
+                      className="relative h-10 border-t select-none pl-6"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   );
                 })}
@@ -284,17 +336,26 @@ const DataTableWithColumnFilterDemo = (props: { data: any[]; status: string }) =
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="pl-6 h-10">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>
@@ -312,7 +373,8 @@ function Filter({ column }: { column: Column<any, unknown> }) {
   const id = useId();
   const columnFilterValue = column.getFilterValue();
   const { filterVariant } = column.columnDef.meta ?? {};
-  const columnHeader = typeof column.columnDef.header === "string" ? column.columnDef.header : "";
+  const columnHeader =
+    typeof column.columnDef.header === "string" ? column.columnDef.header : "";
 
   const facetedUniqueValues = column.getFacetedUniqueValues();
 
@@ -418,7 +480,13 @@ function Filter({ column }: { column: Column<any, unknown> }) {
 
 export default DataTableWithColumnFilterDemo;
 
-function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: string }) {
+function TableCellViewer({
+  item,
+  sectionStatus,
+}: {
+  item: any;
+  sectionStatus: string;
+}) {
   const isMobile = useIsMobile();
 
   const handleApprove = async () => {
@@ -481,7 +549,10 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
   return (
     <Drawer direction={isMobile ? "right" : "right"}>
       <DrawerTrigger asChild>
-        <Button variant="link" className="w-fit px-0 text-left text-foreground cursor-pointer">
+        <Button
+          variant="link"
+          className="w-fit px-0 text-left text-foreground cursor-pointer"
+        >
           {item.title}
         </Button>
       </DrawerTrigger>
@@ -516,7 +587,10 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
               </Badge>
             )}
             {sectionStatus == "verified" && (
-              <Badge variant="default" className=" bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+              <Badge
+                variant="default"
+                className=" bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300"
+              >
                 {item.status}
               </Badge>
             )}
@@ -525,7 +599,11 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
 
         <div className="flex flex-col gap-4 px-4 text-sm">
           <div className="mx-auto">
-            <img src={item.imageOfReport} alt="" className=" object-cover rounded-md" />
+            <img
+              src={item.imageOfReport}
+              alt=""
+              className=" object-cover rounded-md"
+            />
           </div>
           <div>
             <strong>Description:</strong>
@@ -545,6 +623,9 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
               {item.locality},{item.city},{item.state}-{item.pinCode}
             </p>
             <p>LandMark: {item.landmark}</p>
+          </div>
+          <div>
+            <Maps lat={22.7253} lng={75.8649} />
           </div>
           <Separator />
           <div>
@@ -570,11 +651,17 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
             <div className="flex flex-col gap-1">
               <div>
                 <strong>Responsibility of Captain:</strong>
-                <p>Lead volunteers, manage tasks, and ensure the case is completed.</p>
+                <p>
+                  Lead volunteers, manage tasks, and ensure the case is
+                  completed.
+                </p>
               </div>
               <div>
                 <strong>Responsibility of Volunteer:</strong>
-                <p>Help volunteers, coordinate with authorities, and ensure the case is resolved efficiently.</p>
+                <p>
+                  Help volunteers, coordinate with authorities, and ensure the
+                  case is resolved efficiently.
+                </p>
               </div>
             </div>
           )}
@@ -583,10 +670,18 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
         <DrawerFooter>
           {sectionStatus === "pending" && (
             <>
-              <Button variant="default" className="text-white cursor-pointer" onClick={handleApprove}>
+              <Button
+                variant="default"
+                className="text-white cursor-pointer"
+                onClick={handleApprove}
+              >
                 Approve
               </Button>
-              <Button variant="destructive" className="cursor-pointer" onClick={handleReject}>
+              <Button
+                variant="destructive"
+                className="cursor-pointer"
+                onClick={handleReject}
+              >
                 Reject
               </Button>
             </>
@@ -597,7 +692,11 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
               <Button variant="default" className=" cursor-pointer">
                 Join as Captain
               </Button>
-              <Button variant="secondary" className=" cursor-pointer" onClick={handleJoin}>
+              <Button
+                variant="secondary"
+                className=" cursor-pointer"
+                onClick={handleJoin}
+              >
                 Join as Volunteer
               </Button>
             </>
@@ -605,7 +704,11 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
 
           {sectionStatus === "inprogress" && (
             <>
-              <Button variant="default" className=" cursor-pointer" onClick={handleJoin}>
+              <Button
+                variant="default"
+                className=" cursor-pointer"
+                onClick={handleJoin}
+              >
                 Join as Volunteer
               </Button>
             </>
@@ -614,7 +717,11 @@ function TableCellViewer({ item, sectionStatus }: { item: any; sectionStatus: st
           {sectionStatus === "joined" && (
             <>
               <Dialog13 data={item} />
-              <Button variant="secondary" className=" cursor-pointer" onClick={handleOpenChat}>
+              <Button
+                variant="secondary"
+                className=" cursor-pointer"
+                onClick={handleOpenChat}
+              >
                 Open Team Chat
               </Button>
             </>
