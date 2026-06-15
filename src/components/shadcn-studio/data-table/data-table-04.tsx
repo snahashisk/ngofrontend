@@ -625,7 +625,7 @@ function TableCellViewer({
             <p>LandMark: {item.landmark}</p>
           </div>
           <div>
-            <Maps lat={22.7253} lng={75.8649} />
+            <Maps lat={item?.location?.lat} lng={item?.location?.lng} />
           </div>
           <Separator />
           <div>

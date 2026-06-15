@@ -8,13 +8,18 @@ import { SiteHeader } from "@/components/site-header";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { useState, useEffect, use } from "react";
 import axios from "axios";
+import Maps from "@/components/Maps";
 import axiosInstance from "@/lib/axios";
 
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/user";
 import Dialog13 from "@/components/shadcn-studio/dialog/dialog-13";
 
-export default function Page({ params }: { params: Promise<{ reportid: string }> }) {
+export default function Page({
+  params,
+}: {
+  params: Promise<{ reportid: string }>;
+}) {
   const userId = useUserStore((state) => state.user?._id);
   const resolvedParams = use(params);
   const { reportid } = resolvedParams;
@@ -61,17 +66,27 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
                     <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
                       {data?.title}
                     </h2>
-                    <p className="leading-7 [&:not(:first-child)]:mt-4">{data?.description}</p>
-                    <img src={data?.imageOfReport} alt="" className="my-6 rounded-lg " />
+                    <p className="leading-7 [&:not(:first-child)]:mt-4">
+                      {data?.description}
+                    </p>
+                    <img
+                      src={data?.imageOfReport}
+                      alt=""
+                      className="my-6 rounded-lg "
+                    />
                     <Separator />
                     <div className="space-y-2 my-4">
-                      <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">Steps to Resolve</h4>
+                      <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                        Steps to Resolve
+                      </h4>
                       <ul className="my-2 ml-6 list-disc [&>li]:mt-2">
                         {steps.map((step, i) => (
                           <li key={i}>{step}</li>
                         ))}
                       </ul>
                     </div>
+                    <Separator />
+                    <Maps lat={data?.location?.lat} lng={data?.location?.lng} />
                     <Separator />
                     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-5 my-6">
                       <div className="flex flex-col gap-1">
@@ -139,21 +154,30 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
                   </div>
                   <Separator />
                   <div className="mt-8 flex justify-end gap-3 ">
-                    {data?.status === "InProgress" && data?.assignedMembers?.includes(userId) && (
-                      <>
-                        <Dialog13 data={data} />
-                        <Button variant="secondary" className=" cursor-pointer" onClick={handleOpenChat}>
-                          Open Team Chat
-                        </Button>
-                      </>
-                    )}
-                    {data?.status === "InProgress" && data?.assignedMembers?.includes(userId) === false && (
-                      <>
-                        <Button variant="secondary" className=" cursor-pointer">
-                          Join as Volunteer
-                        </Button>
-                      </>
-                    )}
+                    {data?.status === "InProgress" &&
+                      data?.assignedMembers?.includes(userId) && (
+                        <>
+                          <Dialog13 data={data} />
+                          <Button
+                            variant="secondary"
+                            className=" cursor-pointer"
+                            onClick={handleOpenChat}
+                          >
+                            Open Team Chat
+                          </Button>
+                        </>
+                      )}
+                    {data?.status === "InProgress" &&
+                      data?.assignedMembers?.includes(userId) === false && (
+                        <>
+                          <Button
+                            variant="secondary"
+                            className=" cursor-pointer"
+                          >
+                            Join as Volunteer
+                          </Button>
+                        </>
+                      )}
                     {data?.status === "Verified" && (
                       <>
                         <Button variant="default" className="cursor-pointer">
@@ -166,16 +190,26 @@ export default function Page({ params }: { params: Promise<{ reportid: string }>
                     )}
                     {data?.isVerified === false && (
                       <>
-                        <Button variant="default" className="w-24 cursor-pointer">
+                        <Button
+                          variant="default"
+                          className="w-24 cursor-pointer"
+                        >
                           Approve
                         </Button>
-                        <Button variant="destructive" className="w-24 cursor-pointer">
+                        <Button
+                          variant="destructive"
+                          className="w-24 cursor-pointer"
+                        >
                           Reject
                         </Button>
                       </>
                     )}
 
-                    <Button variant="outline" className="w-20 cursor-pointer" onClick={() => router.back()}>
+                    <Button
+                      variant="outline"
+                      className="w-20 cursor-pointer"
+                      onClick={() => router.back()}
+                    >
                       Go Back
                     </Button>
                   </div>

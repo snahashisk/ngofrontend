@@ -3,26 +3,39 @@ import React, { useEffect, useRef } from "react";
 import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 
 interface MapsProps {
-  lat: number;
-  lng: number;
+  lat?: number | string;
+  lng?: number | string;
 }
 
 const Maps = ({ lat, lng }: MapsProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<google.maps.Map | null>(null);
 
+  const parsedLat = typeof lat === "string" ? parseFloat(lat) : lat;
+  const parsedLng = typeof lng === "string" ? parseFloat(lng) : lng;
+
+  const isValid =
+    parsedLat !== undefined &&
+    parsedLat !== null &&
+    !isNaN(parsedLat) &&
+    isFinite(parsedLat) &&
+    parsedLng !== undefined &&
+    parsedLng !== null &&
+    !isNaN(parsedLng) &&
+    isFinite(parsedLng);
+
   useEffect(() => {
+    if (!isValid) return;
+
     const initMap = async () => {
       console.log("Map init");
 
-      // 1. Configure the global loader options
       setOptions({
         key: process.env.NEXT_PUBLIC_MAPS_API_KEY as string,
         v: "weekly",
       });
 
       try {
-        // 2. Fetch both required libraries simultaneously
         const [{ Map }, { AdvancedMarkerElement }] = await Promise.all([
           importLibrary("maps"),
           importLibrary("marker"),
@@ -30,22 +43,21 @@ const Maps = ({ lat, lng }: MapsProps) => {
 
         if (!mapRef.current) return;
 
-        // 3. Clean up any existing map rendering to prevent memory leaks or dual instances
+        const center = { lat: parsedLat, lng: parsedLng };
+
         if (!mapInstance.current) {
           mapInstance.current = new Map(mapRef.current, {
-            center: { lat, lng },
+            center,
             zoom: 14,
-            mapId: "DEMO_MAP_ID", // Required for modern AdvancedMarkerElements to show up!
+            mapId: "DEMO_MAP_ID",
           });
         } else {
-          // If the map exists but props changed, just shift the camera center smoothly
-          mapInstance.current.setCenter({ lat, lng });
+          mapInstance.current.setCenter(center);
         }
 
-        // 4. Place a modern Advanced Marker on the map instance
         new AdvancedMarkerElement({
           map: mapInstance.current,
-          position: { lat, lng },
+          position: center,
           title: "Selected Location",
         });
       } catch (error) {
@@ -54,7 +66,18 @@ const Maps = ({ lat, lng }: MapsProps) => {
     };
 
     initMap();
-  }, [lat, lng]); // Re-runs cleanly when latitude or longitude variables update
+  }, [parsedLat, parsedLng, isValid]);
+
+  if (!isValid) {
+    return (
+      <div
+        className="rounded-md flex items-center justify-center border bg-muted text-muted-foreground text-sm"
+        style={{ width: "100%", height: "200px" }}
+      >
+        Location coordinates not available
+      </div>
+    );
+  }
 
   return (
     <div
