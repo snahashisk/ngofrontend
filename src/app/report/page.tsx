@@ -31,6 +31,7 @@ import { MailIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import FormLayout from "@/components/shadcn-studio/blocks/form-layout-02/form-layout-02";
+import Image from "next/image";
 
 const ReportPage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -59,7 +60,8 @@ const ReportPage = () => {
       >
         <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-3">
+          <a href="/" className="flex items-center gap-3">
+            <Image src="/logo-3.png" alt="logo" width={40} height={40} />
             <span className="text-primary text-[20px] font-semibold">
               GoodDeed Foundation
             </span>
