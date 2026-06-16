@@ -6,7 +6,6 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import DataTableWithColumnFilterDemo from "@/components/shadcn-studio/data-table/data-table-04";
 import { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
-import axios from "axios";
 import axiosInstance from "@/lib/axios";
 import { useUserStore } from "@/store/user";
 import { toast } from "sonner";
@@ -32,30 +31,40 @@ export default function Page() {
         });
         setReports(response.data.data);
         const pendingReports = response.data.data.filter(
-          (report: any) => report.isVerified === false && report.status !== "Rejected",
+          (report: any) =>
+            report.isVerified === false && report.status !== "Rejected",
         );
         const verifiedReports = response.data.data.filter(
-          (report: any) => report.isVerified === true && report.status === "Verified",
+          (report: any) =>
+            report.isVerified === true && report.status === "Verified",
         );
         const inProgressReports = response.data.data.filter(
           (report: any) =>
-            report.isVerified === true && report.status === "InProgress" && !report.assignedMembers.includes(userId),
+            report.isVerified === true &&
+            report.status === "InProgress" &&
+            !report.assignedMembers.includes(userId),
         );
         const joinedReports = response.data.data.filter(
           (report: any) =>
-            report.isVerified === true && report.status === "InProgress" && report.assignedMembers.includes(userId),
+            report.isVerified === true &&
+            report.status === "InProgress" &&
+            report.assignedMembers.includes(userId),
         );
         const resolvedReports = response.data.data.filter(
-          (report: any) => report.isVerified === true && report.status === "Resolved",
+          (report: any) =>
+            report.isVerified === true && report.status === "Resolved",
         );
         setPendingReports(pendingReports);
         setVerifiedReports(verifiedReports);
         setInProgressReports(inProgressReports);
         setJoinedReports(joinedReports);
         setResolvedReports(resolvedReports);
-      } catch (error) {
-        toast.error("Something went wrong");
-        console.error(error);
+      } catch (error: any) {
+        const message =
+          error?.response?.data?.message ||
+          error?.message ||
+          "Something went wrong";
+        toast.error(message);
       }
     };
     fetchReports();
@@ -78,23 +87,38 @@ export default function Page() {
               <SectionCards />
               <Separator />
               <div className="px-4 lg:px-6">
-                <DataTableWithColumnFilterDemo data={joinedReports} status="joined" />
+                <DataTableWithColumnFilterDemo
+                  data={joinedReports}
+                  status="joined"
+                />
               </div>
               <Separator />
               <div className="px-4 lg:px-6">
-                <DataTableWithColumnFilterDemo data={inProgressReports} status="inprogress" />
+                <DataTableWithColumnFilterDemo
+                  data={inProgressReports}
+                  status="inprogress"
+                />
               </div>
               <Separator />
               <div className="px-4 lg:px-6">
-                <DataTableWithColumnFilterDemo data={verifiedReports} status="verified" />
+                <DataTableWithColumnFilterDemo
+                  data={verifiedReports}
+                  status="verified"
+                />
               </div>
               <Separator />
               <div className="px-4 lg:px-6">
-                <DataTableWithColumnFilterDemo data={pendingReports} status="pending" />
+                <DataTableWithColumnFilterDemo
+                  data={pendingReports}
+                  status="pending"
+                />
               </div>
               <Separator />
               <div className="px-4 lg:px-6">
-                <DataTableWithColumnFilterDemo data={resolvedReports} status="resolved" />
+                <DataTableWithColumnFilterDemo
+                  data={resolvedReports}
+                  status="resolved"
+                />
               </div>
               {/* <DataTable data={data} /> */}
             </div>
